@@ -1,1 +1,15 @@
 # SimpleToDoApp
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) UNIQUE NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR(60) NOT NULL
+);
+
+.env file:
+SESSION_SECRET=""
+PG_USER="postgres"
+PG_HOST="localhost"
+PG_DATABASE=""
+PG_PASSWORD=""
+PG_PORT="5432" or "5433"
