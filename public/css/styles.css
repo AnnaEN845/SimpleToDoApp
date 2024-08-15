@@ -7,3 +7,6 @@ body {
       padding-top: 200px;
       text-align: center;
   }
+.error-msg {
+    color: red;
+}
