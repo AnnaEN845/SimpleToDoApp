@@ -13,6 +13,7 @@ const port = 3000;
 const saltRounds = 10;
 env.config();
 
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -61,6 +62,8 @@ app.get("/logout", (req, res) => {
 app.get("/todo", (req, res) => {
     if (req.isAuthenticated()) {
       res.render("todo.ejs");
+      console.log(req.user.id)
+
     } else {
       res.redirect("/login");
     }
@@ -185,7 +188,7 @@ passport.use(
       if (result.rows.length > 0) {
         const user = result.rows[0];
         console.log('User found:', user); // Debugging log
-        
+
         const storedHashedPassword = user.password;
         bcrypt.compare(password, storedHashedPassword, (err, valid) => {
           if (err) {
@@ -215,10 +218,77 @@ passport.use(
 
 passport.serializeUser((user, cb) => {
   cb(null, user);
+
 });
 
 passport.deserializeUser((user, cb) => {
   cb(null, user);
+
+});
+
+app.post("/add-todo", async (req, res) => {
+  const { todotitle, description, dueDate, priority, category } = req.body;
+  const userId = req.user.id;
+
+  try {
+    // Get priority ID
+    const priorityResult = await db.query(
+      "SELECT priority_id FROM priorities WHERE priority = $1",
+      [priority.toLowerCase()]
+    );
+    const priorityResultData = priorityResult.rows[0];
+    if (!priorityResultData) {
+      return res.status(400).send("Priority not found");
+    }
+    const priority_id = priorityResultData.priority_id;
+
+    // Get category ID
+    try {
+      const categoryResult = await db.query(
+        "SELECT category_id FROM categories WHERE category = $1",
+        [category.toLowerCase()]
+      );
+      const categoryResultData = categoryResult.rows[0];
+      if (!categoryResultData) {
+        return res.status(400).send("Category not found");
+      }
+      const category_id = categoryResultData.category_id;
+
+      // Insert into todos and get the todo_id
+      try {
+        const insertTodoResult = await db.query(
+          "INSERT INTO todos (user_id, title, due_date, priority, category) VALUES ($1, $2, $3, $4, $5) RETURNING todo_id",
+          [userId, todotitle, dueDate, priority_id, category_id]
+        );
+        const newTodoId = insertTodoResult.rows[0].todo_id;
+        console.log("New todo ID:", newTodoId);
+
+        // Now insert the description with the new todo_id
+        try {
+          await db.query(
+            "INSERT INTO todosDescription (todo_id, description) VALUES ($1, $2)",
+            [newTodoId, description]
+          );
+          res.redirect("/todo");
+        } catch (error) {
+          console.error("Error adding description:", error);
+          res.status(500).send("Error adding description");
+        }
+
+      } catch (error) {
+        console.error("Error adding todo:", error);
+        res.status(500).send("Error adding todo");
+      }
+
+    } catch (error) {
+      console.error("Error retrieving category:", error);
+      res.status(500).send("Error retrieving category");
+    }
+
+  } catch (error) {
+    console.error("Error retrieving priority:", error);
+    res.status(500).send("Error retrieving priority");
+  }
 });
 
 app.listen(port, () => {
