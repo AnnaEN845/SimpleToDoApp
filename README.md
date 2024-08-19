@@ -12,9 +12,9 @@ CREATE TABLE priorities (
 );
 INSERT INTO priorities (priority)
 VALUES
-('Low'),
-('Medium'),
-('High');
+('low'),
+('medium'),
+('high');
 
 CREATE TABLE categories (
 	category_id SERIAL PRIMARY KEY,
@@ -23,9 +23,9 @@ CREATE TABLE categories (
 
 INSERT INTO categories (category)
 VALUES
-('Personal'),
-('Work'),
-('Shopping');
+('personal'),
+('work'),
+('shopping');
 
 CREATE TABLE todos (
   todo_id SERIAL PRIMARY KEY,

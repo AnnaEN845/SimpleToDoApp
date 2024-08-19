@@ -40,9 +40,7 @@ app.get("/", (req, res) => {
   res.render("home.ejs");
 });
 
-// app.get("/login", (req, res) => {
-//   res.render("login.ejs");
-// });
+
 app.get("/login", (req, res) => {
   res.render("login.ejs", { userInput: {}, error: null });
 });
@@ -59,11 +57,42 @@ app.get("/logout", (req, res) => {
     res.redirect("/");
   });
 });
-app.get("/todo", (req, res) => {
+app.get("/todo", async (req, res) => {
     if (req.isAuthenticated()) {
-      res.render("todo.ejs");
+      // res.render("todo.ejs");
       console.log(req.user.id)
-
+      console.log(req.user.name)
+      const userId = req.user.id;
+      const userName = req.user.name;
+      try {
+      const todoResult = await db.query(
+        "SELECT t.todo_id, t.title, t.completed, td.description, t.due_date, p.priority, c.category FROM todos t JOIN todosdescription td ON t.todo_id = td.todo_id JOIN priorities p ON t.priority = p.priority_id JOIN categories c ON t.category = c.category_id WHERE t.user_id = $1 ORDER BY created_at DESC", [userId]);
+     
+            // Process the todos data
+            const todos = todoResult.rows.map(todo => {
+              // Format due_date as YYYY-MM-DD
+              const formattedDueDate = todo.due_date.toISOString().split('T')[0];
+      
+              // Capitalize the first letter of priority and category
+              const formattedPriority = todo.priority.charAt(0).toUpperCase() + todo.priority.slice(1);
+              const formattedCategory = todo.category.charAt(0).toUpperCase() + todo.category.slice(1);
+      
+              return {
+                ...todo,
+                due_date: formattedDueDate,
+                priority: formattedPriority,
+                category: formattedCategory
+              };
+            });  
+      console.log(todos)
+      const workTodos = todos.filter(todo => todo.category === 'Work');
+      const personalTodos = todos.filter(todo => todo.category === 'Personal');
+      const shoppingTodos = todos.filter(todo => todo.category === 'Shopping');
+      res.render("todo.ejs", { userId, userName, workTodos, personalTodos, shoppingTodos });
+    } catch (error) {
+      console.error("Error fetching todos:", error);
+      res.status(500).send("Error fetching todos");
+    }
     } else {
       res.redirect("/login");
     }
@@ -74,14 +103,6 @@ app.get("/todo", (req, res) => {
 ////////////////SUBMIT GET ROUTE/////////////////
 
 
-// app.post(
-//   "/login",
-//   passport.authenticate("local", {
-//     successRedirect: "/todo",
-//     failureRedirect: "/login",
-
-//   })
-// );
 app.post("/login", (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) { 
@@ -291,6 +312,30 @@ app.post("/add-todo", async (req, res) => {
   }
 });
 
+app.post("/update-todo", async (req, res) => {
+  const { completed, todo_id } = req.body;
+  const isCompleted = completed === "on" ? true : false;
+
+  try {
+    await db.query("UPDATE todos SET completed = $1 WHERE todo_id = $2", [isCompleted, todo_id]);
+    res.redirect("/todo");
+  } catch (error) {
+    console.error("Error updating todo:", error);
+    res.status(500).send("Error updating todo");
+  }
+});
+
+app.post("/delete-todo", async (req, res) => {
+  const todo_id = req.body.todo_id;
+  console.log(todo_id)
+  try {
+    await db.query("DELETE FROM todos WHERE todo_id = $1", [todo_id]);
+    res.redirect("/todo");
+  } catch (error) {
+    console.error("Error deleting todo:", error);
+    res.status(500).send("Error deleting todo");
+  }
+});
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
