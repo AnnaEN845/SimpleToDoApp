@@ -1,45 +1,42 @@
 <%- include('partials/header') %>
-<div class="container mt-5">
-  <h1>Register</h1>
+<div class="container mt-4">
+
+<div class="container-fluid d-flex justify-content-center align-items-center vh-100">
+  <div class="card large-card">
+    <div class="card-body">
+      <h2 class="card-title text-center mb-4">Register</h2>
+      <form action="/register" method="POST">
+        <div class="form-group">
+          <label for="name">Name*</label>
+          <input type="text" class="form-control" name="name" value="<%= typeof userInput !== 'undefined' ? userInput.name : '' %>">
+        </div>
+        <div class="form-group">
+          <label for="username">Email*</label>
+          <input type="email" class="form-control" name="username" value="<%= typeof userInput !== 'undefined' ? userInput.username : '' %>">
+        </div>
+        <div class="form-group">
+          <label for="password">Password*</label>
+          <input type="password" class="form-control" name="password">
+        </div>
+        <button id="registerBtn" type="submit" class="btn btn-lg btn-dark btn-block btn-blue" 
+        <%= showLogin ? 'hidden' : '' %>>Register</button>
   <% if (typeof errors !== 'undefined' && errors.length > 0) { %>     
     <ul>
       <% errors.forEach(error => { %>           
         <li class="error-msg"><%= error.msg %></li>
       <% }); %>       
     </ul>
- 
+   
   <% if (showLogin) { %>  <!-- Check if showLogin is true -->
-    <a class="btn btn-dark mb-3" href="/login" role="button">Login</a>
+    <a class="btn btn-lg btn-blue" href="/login" role="button">Login</a>
+    <a class="btn btn-lg btn-blue" href="/register" role="button">Register New User</a>
   <% } %>
-  <% } %>  
-
-  <div class="row">
-    <div class="col-sm-8">
-      <div class="card">
-        <div class="card-body">
-
-          <!-- Makes POST request to /register route -->
-          <form action="/register" method="POST">
-            <div class="form-group">
-              <label for="name">Name*</label>
-              <input type="name" class="form-control" name="name" value="<%= typeof userInput !== 'undefined' ? userInput.name : '' %>">
-            </div>
-            <div class="form-group">
-              <label for="username">Email*</label>
-              <input type="email" class="form-control" name="username" value="<%= typeof userInput !== 'undefined' ? userInput.username : '' %>">
-            </div>
-            <div class="form-group">
-              <label for="password">Password*</label>
-              <input type="password" class="form-control" name="password">
-            </div>
-            <button type="submit" class="btn btn-dark">Register</button>
-          </form>
-        </div>
-      </div>
+  <% } %> 
+        <!-- <button id="registerBtn" type="submit" class="btn btn-lg btn-dark btn-block btn-blue">Register</button> -->
+      </form>
     </div>
-
-
   </div>
+</div>
 </div>
 
 <%- include('partials/header') %>

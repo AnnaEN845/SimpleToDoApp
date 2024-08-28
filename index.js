@@ -45,8 +45,16 @@ app.get("/login", (req, res) => {
   res.render("login.ejs", { userInput: {}, error: null });
 });
 
+// app.get("/register", (req, res) => {
+//   res.render("register.ejs");
+// });
 app.get("/register", (req, res) => {
-  res.render("register.ejs");
+  // Render the register page with default values
+  res.render("register.ejs", {
+    errors: [],
+    userInput: {},
+    showLogin: false, // Default to false
+  });
 });
 
 app.get("/logout", (req, res) => {
@@ -134,6 +142,7 @@ const validateRegistration = [
 ];
 
 app.post("/register", validateRegistration, async (req, res) => {
+   
   // Check for validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -182,7 +191,7 @@ app.post("/register", validateRegistration, async (req, res) => {
               return res.status(500).render('register.ejs', { 
                 errors: [{ msg: "Error during login" }], 
                 data: req.body, 
-                showLogin: false });
+                showLogin: false});
             }
             console.log("success");
             res.redirect("/todo");
