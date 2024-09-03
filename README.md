@@ -54,3 +54,12 @@ PG_HOST="localhost"
 PG_DATABASE=""
 PG_PASSWORD=""
 PG_PORT="5432" or "5433"
+
+
+
+Tommy Hilfiger Color Palette:
+	#1b2651	(27,38,81)
+#cd2028	(205,32,40)
+#ffffff	(255,255,255)
+#edeae1	(237,234,225)
+#166c96	(22,108,150)

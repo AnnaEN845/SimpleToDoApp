@@ -10,11 +10,6 @@ body {
       padding-top: 200px;
       text-align: center;
   }
-  /* .centered {
-    padding-top: 50px;
-    text-align: center;
-} */
-
 
 .btn-white{
     background-color: #ffffff;
@@ -23,28 +18,52 @@ body {
     font-weight: bold;
   }
 .btn-blue{
-    /* background-color: #166c96; */
     background-color: #1b2651;
     width: 250px;
     color:#ffffff;
     font-weight: bold;
+  }
+  .btn-blue-small{
+    background-color: #1b2651;
+    width: 150px;
+    color:#ffffff;
+    font-weight: bold;
+  }
+
+  .btn-white-medium {
+    background-color: #ffffff;
+    color:#1b2651;
+    /* width: 90px;
+    height: 45px; */
+    font-weight: bold;
+    font-size: 1.0rem;
   }
 .error-msg {
     color: #cd2028;
 }
 
 .large-card {
-    max-width: 600px;
-    width: 100%;
-    margin: 20px;
-    color: #1b2651 ;
-    font-weight: bold;
-    background-color: #edeae1;
+  max-width: 600px;
+  width: 100%;
+  margin: 20px;
+  color: #1b2651 ;
+  font-weight: bold;
+  background-color: #edeae1;
   }
-
+.medium-card{
+  max-width: 800px;
+  width: 100%;
+  color: #1b2651 ;
+  font-weight: bold;
+  font-size: 0.75rem;
+  background-color: #edeae1;
+}
   @media (max-width: 768px) {
     .large-card {
       max-width: 90%;
+    }
+    .btn-white-medium{
+      max-width: 50%;
     }
   }
 
@@ -54,4 +73,16 @@ body {
 
   .btn-block {
     margin-top: 20px;
+  }
+
+  .fixed-size-button {
+    width: 40px; /* Set a fixed width */
+    height: 40px; /* Set a fixed height */
+    flex-shrink: 0; /* Prevent the button from shrinking */
+  }
+  .text-blue{
+    color: #1b2651;
+  }
+  .text-size-accordion-body{
+    font-size: small;
   }
