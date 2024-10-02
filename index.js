@@ -79,7 +79,8 @@ app.get("/todo", async (req, res) => {
             // Process the todos data
             const todos = todoResult.rows.map(todo => {
               // Format due_date as YYYY-MM-DD
-              const formattedDueDate = todo.due_date.toISOString().split('T')[0];
+              // const formattedDueDate = todo.due_date.toISOString().split('T')[0];
+              const formattedDueDate = new Date(todo.due_date).toLocaleDateString('en-CA');
       
               // Capitalize the first letter of priority and category
               const formattedPriority = todo.priority.charAt(0).toUpperCase() + todo.priority.slice(1);
@@ -319,6 +320,7 @@ app.post("/add-todo", async (req, res) => {
     console.error("Error retrieving priority:", error);
     res.status(500).send("Error retrieving priority");
   }
+  
 });
 
 app.post("/update-todo", async (req, res) => {

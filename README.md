@@ -132,7 +132,8 @@ Open your browser and go to <http://localhost:3000>
 
 
 
-<!-- Tommy Hilfiger Color Palette:
+<!-- https://www.color-hex.com/color-palette/89010 
+Tommy Hilfiger Color Palette:
 	#1b2651	(27,38,81)
 #cd2028	(205,32,40)
 #ffffff	(255,255,255)
